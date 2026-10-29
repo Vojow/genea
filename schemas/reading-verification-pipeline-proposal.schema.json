@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-verification-pipeline-proposal/v1",
+  "title": "Verified isolated blind-run proposal for reading pipeline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "adapterVersion",
+    "package",
+    "run",
+    "independentReading",
+    "exportFingerprint"
+  ],
+  "properties": {
+    "schema": { "const": "genea.reading-verification-pipeline-proposal/v1" },
+    "adapterVersion": { "const": "genea-reading-verification-adapter-v1" },
+    "exportFingerprint": { "$ref": "#/$defs/sha256" },
+    "package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "configFingerprint",
+        "manifestSha256",
+        "bindingHash",
+        "neutralFieldMapSha256",
+        "source",
+        "fieldMap"
+      ],
+      "properties": {
+        "packageId": { "type": "string", "minLength": 1 },
+        "configFingerprint": { "$ref": "#/$defs/sha256" },
+        "manifestSha256": { "$ref": "#/$defs/sha256" },
+        "bindingHash": { "$ref": "#/$defs/sha256" },
+        "neutralFieldMapSha256": { "$ref": "#/$defs/sha256" },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "sha256", "locator"],
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/sha256" },
+            "locator": { "type": "string", "minLength": 1 }
+          }
+        },
+        "fieldMap": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "fieldId",
+              "path",
+              "sourceSegmentId",
+              "locator",
+              "bbox",
+              "regionSha256"
+            ],
+            "properties": {
+              "fieldId": { "type": "string", "pattern": "^f[0-9]{3}$" },
+              "path": { "type": "string", "minLength": 1 },
+              "sourceSegmentId": { "type": "string", "minLength": 1 },
+              "locator": { "type": "string", "minLength": 1 },
+              "bbox": { "$ref": "#/$defs/bbox" },
+              "regionSha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runId",
+        "readerId",
+        "auditTailHash",
+        "submissionTailHash"
+      ],
+      "properties": {
+        "runId": { "type": "string", "minLength": 1 },
+        "readerId": { "type": "string", "minLength": 1 },
+        "auditTailHash": {
+          "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }]
+        },
+        "submissionTailHash": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "independentReading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "readerId", "runId", "contextDisclosed", "fields"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "readerId": { "type": "string", "minLength": 1 },
+        "runId": { "type": "string", "minLength": 1 },
+        "contextDisclosed": { "const": false },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/field" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "bbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "graphemeEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceSegmentId", "locator", "sha256", "bbox", "scale"],
+      "properties": {
+        "sourceSegmentId": { "type": "string", "minLength": 1 },
+        "locator": { "type": "string", "minLength": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "scale": { "const": "field" }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "value",
+        "normalizedValue",
+        "confidence",
+        "certainty",
+        "alternatives",
+        "sourceQuote",
+        "sourceSegment",
+        "bbox",
+        "groundingBasis",
+        "characterAnalysis",
+        "graphemeEvidenceRefs",
+        "languageFormulaAssessment"
+      ],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "value": { "type": "string", "minLength": 1 },
+        "normalizedValue": { "type": "null" },
+        "confidence": { "type": "null" },
+        "certainty": { "type": "null" },
+        "alternatives": { "type": "array", "maxItems": 0 },
+        "sourceQuote": { "type": "null" },
+        "sourceSegment": { "type": "string", "minLength": 1 },
+        "bbox": { "$ref": "#/$defs/bbox" },
+        "groundingBasis": { "const": "source_segment_region" },
+        "characterAnalysis": { "type": "array", "maxItems": 0 },
+        "graphemeEvidenceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/$defs/graphemeEvidence" }
+        },
+        "languageFormulaAssessment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": { "status": { "const": "not_assessed" } }
+        }
+      }
+    }
+  }
+}

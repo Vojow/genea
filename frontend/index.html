@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#285c53" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Genea" />
+    <base href="%BASE_URL%" />
+    <title>Genea — lokalne archiwum rodzinne</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div id="app-header-host"></div>
+
+      <main>
+        <section class="view is-active" id="view-tree" data-view-panel="tree">
+          <div class="section-heading tree-heading">
+            <div>
+              <p class="eyebrow">Drzewo rodzinne</p>
+              <h1 id="tree-title">Całe drzewo rodzinne</h1>
+              <p class="lead" id="tree-description">
+                Rodzina w układzie pokoleń — od Ciebie do najstarszych ustalonych przodków.
+              </p>
+            </div>
+            <div class="summary-cards tree-view-stats" aria-label="Podsumowanie aktualnego widoku drzewa" aria-live="polite">
+              <div>
+                <strong id="tree-person-count">—</strong>
+                <span id="tree-person-count-label">osób w widoku</span>
+              </div>
+              <div>
+                <strong id="tree-generation-count">—</strong>
+                <span id="tree-generation-label">pokoleń wstecz</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-workspace">
+            <div class="tree-stage">
+              <div class="tree-toolbar">
+                <label class="search-field tree-search">
+                  <span class="sr-only">Szukaj osoby w drzewie</span>
+                  <span aria-hidden="true">⌕</span>
+                  <input id="tree-search" type="search" placeholder="Szukaj osoby…" />
+                </label>
+                <div class="segmented" aria-label="Zakres drzewa">
+                  <button data-tree-mode="branch">Gałęzie rodziny</button>
+                  <button class="is-active" data-tree-mode="all">Całe drzewo</button>
+                  <button data-tree-mode="ancestors">Przodkowie</button>
+                </div>
+                <div class="segmented tree-ancestor-layout-controls" id="tree-ancestor-layout-controls" aria-label="Układ przodków" hidden>
+                  <button class="is-active" type="button" data-ancestor-layout="vertical" aria-pressed="true">Pionowy</button>
+                  <button type="button" data-ancestor-layout="fan" aria-pressed="false">Wachlarz</button>
+                </div>
+                <div class="tree-ancestor-depth-controls" id="tree-ancestor-depth-controls" hidden>
+                  <span id="tree-ancestor-depth-status" role="status" aria-live="polite"></span>
+                  <button class="quiet-button" id="tree-ancestor-depth-more" type="button">Pokaż jeszcze 1 pokolenie</button>
+                  <button class="quiet-button" id="tree-ancestor-depth-all" type="button">Pokaż cały dostępny zakres</button>
+                </div>
+                <label class="branch-picker" id="tree-branch-picker" hidden>
+                  <span class="sr-only">Wybierz gałąź rodziny</span>
+                  <select id="tree-branch-select" aria-label="Wybierz gałąź rodziny"></select>
+                </label>
+                <div class="tree-zoom" aria-label="Powiększenie drzewa">
+                  <button id="tree-zoom-out" title="Pomniejsz" aria-label="Pomniejsz">−</button>
+                  <span id="tree-zoom-value">100%</span>
+                  <button id="tree-zoom-in" title="Powiększ" aria-label="Powiększ">+</button>
+                </div>
+                <button class="quiet-button" id="tree-fit">Dopasuj widok</button>
+                <button class="quiet-button mobile-presentation-toggle" id="tree-presentation-toggle" type="button" aria-pressed="false">Widok listy</button>
+              </div>
+              <div class="tree-evidence-note">
+                Przeciągnij puste tło, aby przesuwać drzewo. Kolor i opis karty mówią, czy łącznik wynika z aktu, materiału rodzinnego czy pozostaje hipotezą.
+              </div>
+              <div class="tree-scroll" id="tree-scroll">
+                <div class="tree-inner" id="tree-inner">
+                  <div class="tree-surface" id="tree-surface">
+                    <svg class="tree-connectors" id="tree-connectors" aria-hidden="true"></svg>
+                    <div class="tree-node-layer" id="tree-node-layer"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="tree-legend">
+                <span><i class="tree-legend-line documented"></i>potwierdzone aktem</span>
+                <span><i class="tree-legend-line family-known"></i>znane rodzinnie</span>
+                <span><i class="tree-legend-line unchecked"></i>niesprawdzone / brak importu</span>
+                <span><i class="tree-legend-line hypothesis"></i>hipoteza</span>
+                <span><i class="review-dot agent"></i>sprawdzone agentowo</span>
+                <span><i class="review-dot partial"></i>część agentowo / część dla Ciebie</span>
+              </div>
+            </div>
+            <aside class="inspector tree-inspector" id="tree-inspector" aria-live="polite"></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-map" data-view-panel="map">
+          <div class="section-heading map-heading">
+            <div>
+              <p class="eyebrow">Geografia rodziny w czasie</p>
+              <h1 id="map-title">Mapa rodzin i przemieszczania</h1>
+              <p class="lead" id="map-description">
+                Datowane miejsca z aktów, bez dopasowywania osób po samym nazwisku.
+              </p>
+            </div>
+            <div class="summary-cards" aria-label="Podsumowanie mapy">
+              <div><strong id="map-place-count">—</strong><span>miejsc</span></div>
+              <div><strong id="map-observation-count">—</strong><span>obserwacji</span></div>
+              <div><strong id="map-route-count">—</strong><span>odcinków osób</span></div>
+            </div>
+          </div>
+
+          <div class="map-workspace">
+            <div class="map-stage-column">
+              <details class="map-filter-panel" open>
+                <summary>Filtry mapy <span aria-hidden="true">⌄</span></summary>
+                <div class="map-filter-content">
+              <div class="map-toolbar">
+                <details class="map-line-picker" id="map-line-picker">
+                  <summary aria-label="Wybierz linie rodziny">
+                    <span>Linie rodziny</span>
+                    <strong id="map-line-summary">—</strong>
+                  </summary>
+                  <div class="map-line-popover">
+                    <div class="map-line-actions">
+                      <button type="button" id="map-lines-all">Wszystkie</button>
+                      <button type="button" id="map-lines-none">Wyczyść</button>
+                    </div>
+                    <div id="map-line-options" class="map-line-options" role="group" aria-label="Widoczne linie rodziny"></div>
+                  </div>
+                </details>
+                <div class="segmented" aria-label="Tryb mapy">
+                  <button class="is-active" data-map-mode="locations">Miejsca w okresie</button>
+                  <button data-map-mode="movement">Przemieszczanie</button>
+                </div>
+                <button class="quiet-button" id="map-reset">Cały okres</button>
+                <div class="map-camera-controls" aria-label="Zakres geograficzny mapy">
+                  <button class="quiet-button" data-map-camera="line">Dopasuj do wybranych</button>
+                  <button class="quiet-button" data-map-camera="poland">Polska</button>
+                  <button class="quiet-button" data-map-camera="world">Świat</button>
+                </div>
+              </div>
+              <div class="map-timebar">
+                <div class="map-time-heading">
+                  <strong>Zakres czasu</strong>
+                  <span><output id="map-year-from-output">—</output>–<output id="map-year-to-output">—</output></span>
+                </div>
+                <div class="map-range" aria-label="Zakres lat">
+                  <input id="map-year-from" type="range" aria-label="Rok początkowy" />
+                  <input id="map-year-to" type="range" aria-label="Rok końcowy" />
+                </div>
+              </div>
+              <div class="map-method-note">
+                Podkład administracyjny jest orientacyjny, nie pokazuje historycznych dróg, działek ani granic z daty zdarzenia. W trybie przemieszczania łączone są kolejne udokumentowane miejsca tej samej osoby; pobyt ma pierwszeństwo przed miejscem sporządzenia aktu.
+              </div>
+                </div>
+              </details>
+              <div class="family-map-wrap" id="family-map-wrap">
+                <div id="family-map-canvas" role="application" aria-label="Interaktywna mapa miejsc rodzinnych"></div>
+                <svg id="family-map-svg" role="img" aria-label="Schematyczna mapa miejsc rodzinnych"></svg>
+                <div class="map-empty" id="map-empty" hidden>Brak obserwacji w wybranym zakresie.</div>
+                <div class="map-local-badge" id="map-local-badge">ładowanie lokalnych kafli…</div>
+              </div>
+              <div class="map-legend" id="map-legend"></div>
+            </div>
+            <aside class="inspector map-inspector" id="map-inspector" aria-live="polite"></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-graph" data-view-panel="graph">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Badania FAN i mapa dowodów</p>
+              <h1>Osoby, świadkowie i domostwa jako sieć</h1>
+              <p class="lead">
+                Osoby z różnych aktów pozostają osobnymi wystąpieniami, dopóki ich
+                tożsamość nie zostanie jawnie rozstrzygnięta.
+              </p>
+            </div>
+            <div class="summary-cards" aria-label="Podsumowanie danych">
+              <div><strong id="people-count">—</strong><span>osób-kandydatów</span></div>
+              <div><strong id="event-count">—</strong><span>zdarzeń</span></div>
+              <div><strong id="candidate-count">—</strong><span>powiązań do oceny</span></div>
+            </div>
+          </div>
+
+          <div class="workspace">
+            <div class="graph-stage">
+              <div class="graph-toolbar">
+                <label class="search-field">
+                  <span class="sr-only">Szukaj osoby lub miejsca</span>
+                  <span aria-hidden="true">⌕</span>
+                  <input id="graph-search" type="search" placeholder="Nazwisko, miejsce, rola…" />
+                </label>
+                <div class="segmented" aria-label="Zakres sieci">
+                  <button class="is-active" data-graph-mode="people">Osoby i tożsamości</button>
+                  <button data-graph-mode="fan">FAN</button>
+                  <button data-graph-mode="clusters">Klastry</button>
+                </div>
+                <button class="quiet-button" id="graph-fit">Dopasuj widok</button>
+                <button class="quiet-button mobile-presentation-toggle" id="graph-presentation-toggle" type="button" aria-pressed="false">Widok listy</button>
+              </div>
+              <details class="graph-filter-panel" id="graph-filter-panel" open>
+                <summary>Filtry linii i zasięgu <span aria-hidden="true">⌄</span></summary>
+                <div class="graph-filterbar" aria-label="Filtry linii i zasięgu FAN">
+                <label class="graph-select-field">
+                  <span>Linia</span>
+                  <select id="graph-scope" aria-label="Filtruj według linii rodzinnej"></select>
+                </label>
+                <label class="graph-select-field">
+                  <span>Zasięg</span>
+                  <select id="graph-depth" aria-label="Zasięg sieci FAN">
+                    <option value="0">Rdzeń</option>
+                    <option value="1">FAN 1</option>
+                    <option value="2">FAN 2</option>
+                    <option value="all">Wszystko</option>
+                  </select>
+                </label>
+                <label class="graph-switch">
+                  <input id="graph-bridges" type="checkbox" role="switch" checked />
+                  <span>Zachowaj łączniki</span>
+                </label>
+                <label class="graph-switch">
+                  <input id="graph-candidates" type="checkbox" role="switch" />
+                  <span>Kandydatury</span>
+                </label>
+                <div class="graph-mode-controls" data-mode-controls="people">
+                  <label class="graph-select-field">
+                    <span>Status</span>
+                    <select id="graph-identity-status" aria-label="Status tożsamości">
+                      <option value="all">Wszystkie</option>
+                      <option value="resolved">Rozstrzygnięte</option>
+                      <option value="unresolved">Z kandydaturami</option>
+                      <option value="unlinked">Nieprzypisane</option>
+                    </select>
+                  </label>
+                  <label class="graph-select-field">
+                    <span>Min. wystąpień</span>
+                    <select id="graph-min-occurrences" aria-label="Minimalna liczba wystąpień">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="graph-mode-controls" data-mode-controls="fan" hidden>
+                  <label class="graph-select-field">
+                    <span>Rola</span>
+                    <select id="graph-fan-role" aria-label="Rola w sieci FAN">
+                      <option value="all">Wszystkie role</option>
+                      <option value="witness">Świadkowie</option>
+                      <option value="godparent">Chrzestni</option>
+                      <option value="informant">Zgłaszający</option>
+                      <option value="family">Rodzina w akcie</option>
+                      <option value="other">Pozostałe</option>
+                    </select>
+                  </label>
+                  <label class="graph-switch">
+                    <input id="graph-households" type="checkbox" role="switch" />
+                    <span>Gospodarstwa</span>
+                  </label>
+                  <label class="graph-switch">
+                    <input id="graph-documents" type="checkbox" role="switch" />
+                    <span>Dokumenty</span>
+                  </label>
+                </div>
+                <div class="graph-mode-controls" data-mode-controls="clusters" hidden>
+                  <label class="graph-select-field">
+                    <span>Typ klastra</span>
+                    <select id="graph-cluster-type" aria-label="Typ klastra">
+                      <option value="all">Wszystkie</option>
+                      <option value="household">Gospodarstwa</option>
+                      <option value="network">Sieci badawcze</option>
+                      <option value="unassigned">Poza klastrami</option>
+                    </select>
+                  </label>
+                  <label class="graph-select-field">
+                    <span>Min. osób</span>
+                    <select id="graph-min-cluster-members" aria-label="Minimalna liczba osób w klastrze">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                    </select>
+                  </label>
+                </div>
+                <button class="graph-clear" id="graph-clear-filters">Wyczyść filtry</button>
+                  <span class="graph-filter-summary" id="graph-filter-summary" aria-live="polite">—</span>
+                </div>
+              </details>
+              <div class="method-note" id="method-note"></div>
+              <div class="graph-scope-warning" id="graph-scope-warning" role="status" hidden></div>
+              <div class="canvas-wrap" id="graph-wrap">
+                <section class="line-navigator" id="graph-line-navigator" aria-labelledby="line-navigator-title" hidden>
+                  <header class="line-navigator-heading">
+                    <div>
+                      <span class="eyebrow">Punkt startowy badań</span>
+                      <h2 id="line-navigator-title">Wybierz linię rodzinną</h2>
+                    </div>
+                    <p>Drzewo pokazuje pokrewieństwo. Tutaj wybierasz zakres lokalnej sieci FAN, gospodarstw i dowodów.</p>
+                  </header>
+                  <div class="line-navigator-groups" id="graph-line-groups"></div>
+                </section>
+                <canvas id="graph-canvas" aria-label="Interaktywna sieć rodzinna"></canvas>
+                <div id="graph-mobile-list" class="graph-mobile-list" aria-label="Lista widocznych elementów sieci" hidden></div>
+                <div class="graph-evidence-context" id="graph-evidence-context" role="status" hidden>
+                  <span>Akty na grafie: <strong id="graph-evidence-person">wybrana osoba</strong></span>
+                  <button type="button" id="graph-evidence-close">Ukryj akty</button>
+                </div>
+                <details class="graph-overlay-panel graph-legend-panel">
+                  <summary>Legenda</summary>
+                  <div class="graph-legend" aria-label="Legenda grafu">
+                    <div class="graph-legend-group">
+                      <strong>Typ</strong>
+                      <span data-legend-modes="people fan"><i class="legend-person"></i>wystąpienie w akcie</span>
+                      <span data-legend-modes="people fan"><i class="legend-identity"></i>rozstrzygnięta osoba</span>
+                      <span data-legend-modes="fan"><i class="legend-event"></i>zdarzenie / akt</span>
+                      <span data-legend-modes="fan"><i class="legend-source"></i>źródło</span>
+                      <span data-legend-modes="fan"><i class="legend-household"></i>gospodarstwo</span>
+                      <span data-legend-modes="clusters"><i class="legend-cluster"></i>zagregowany klaster</span>
+                    </div>
+                    <div class="graph-legend-group">
+                      <strong>Kontrola odczytu</strong>
+                      <span><i class="review-dot agent"></i>agentowo sprawdzone</span>
+                      <span><i class="review-dot partial"></i>część dla Ciebie</span>
+                      <span><i class="review-dot human"></i>sprawdzone przez Ciebie</span>
+                    </div>
+                    <div class="graph-legend-group">
+                      <strong>Zakres</strong>
+                      <span><i class="legend-core"></i>rdzeń linii</span>
+                      <span><i class="legend-fan"></i>FAN</span>
+                      <span><i class="legend-bridge"></i>łącznik</span>
+                      <span><i class="legend-candidate"></i>kandydatura</span>
+                    </div>
+                  </div>
+                </details>
+                <details class="graph-overlay-panel graph-minimap-panel">
+                  <summary>Minimapa</summary>
+                  <canvas id="graph-minimap" class="graph-minimap" aria-label="Minimapa grafu"></canvas>
+                </details>
+                <div class="graph-help">Przeciągnij węzeł · przybliż, aby zobaczyć więcej etykiet · kliknij tło, aby wyłączyć fokus</div>
+              </div>
+            </div>
+            <aside class="inspector" id="graph-inspector" aria-live="polite"></aside>
+          </div>
+        </section>
+
+        <section class="view" id="view-sources" data-view-panel="sources">
+          <div id="sources-view-host"></div>
+        </section>
+
+        <section class="view" id="view-research" data-view-panel="research">
+          <div id="research-view-host"></div>
+        </section>
+
+        <section id="routed-view-host" class="routed-view-host" aria-live="polite"></section>
+
+        <section class="loading-view" id="loading-view">
+          <span class="loader"></span>
+          <h1>Układam lokalne archiwum…</h1>
+          <p>Ładuję osoby, zdarzenia, źródła i transkrypcje.</p>
+        </section>
+      </main>
+      <div id="pwa-status" class="pwa-status" role="status" aria-live="polite" hidden></div>
+    </div>
+    <div id="vue-shell"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

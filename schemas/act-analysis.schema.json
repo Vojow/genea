@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Genealogical act analysis v2",
+  "description": "Wynik odczytu aktu. Pola v1 pozostają dostępne dla analiz archiwalnych.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "source_id", "document_type", "languages", "review_status", "summary_pl",
+    "reading", "classifications", "layers", "informant", "events", "field_readings",
+    "artifact_provenance", "independent_checks", "uncertainties", "transcription_original",
+    "translation_pl", "people", "dates", "places", "relationships", "uncertain_fragments",
+    "research_notes"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["1.0", "2.0"] },
+    "source_id": { "type": "string", "minLength": 1 },
+    "source_item_id": { "type": "string", "minLength": 1, "description": "Opcjonalny dokładny dokument potomny w hierarchii wskazanego source_id; używany np. dla aktu w księdze." },
+    "document_type": { "type": "string", "enum": ["birth-baptism", "marriage", "death-burial", "census", "index", "other", "unknown"] },
+    "languages": { "type": "array", "items": { "type": "string" } },
+    "review_status": { "type": "string", "enum": ["high-confidence", "needs-review", "partly-illegible"] },
+    "summary_pl": { "type": "string" },
+    "reading": { "$ref": "#/$defs/reading" },
+    "classifications": { "$ref": "#/$defs/classifications" },
+    "layers": { "$ref": "#/$defs/layers" },
+    "informant": { "anyOf": [{ "$ref": "#/$defs/informant" }, { "type": "null" }] },
+    "events": { "type": "array", "items": { "$ref": "#/$defs/event" } },
+    "field_readings": { "type": "array", "items": { "$ref": "#/$defs/fieldReading" } },
+    "artifact_provenance": { "type": "array", "items": { "$ref": "#/$defs/artifact" } },
+    "independent_checks": { "type": "array", "items": { "$ref": "#/$defs/independentCheck" } },
+    "uncertainties": { "type": "array", "items": { "$ref": "#/$defs/uncertainty" } },
+
+    "transcription_original": { "type": "string", "description": "Legacy v1; prefer layers.transcription." },
+    "translation_pl": { "type": "string", "description": "Legacy v1; prefer layers.translation." },
+    "people": { "type": "array", "items": { "$ref": "#/$defs/legacyPerson" } },
+    "dates": { "type": "array", "items": { "$ref": "#/$defs/legacyDate" } },
+    "places": { "type": "array", "items": { "$ref": "#/$defs/legacyPlace" } },
+    "relationships": { "type": "array", "items": { "$ref": "#/$defs/legacyRelationship" } },
+    "uncertain_fragments": { "type": "array", "items": { "$ref": "#/$defs/legacyUncertainty" } },
+    "research_notes": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "readStatus": { "type": "string", "enum": ["Certain", "Probable", "Ambiguous", "Illegible", "Damaged"] },
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["image", "region", "quote", "segment_ref"],
+      "properties": {
+        "image": { "type": "string" }, "region": { "type": "string" }, "quote": { "type": "string" },
+        "segment_ref": { "type": ["string", "null"] }
+      }
+    },
+    "evidenceList": { "type": "array", "items": { "$ref": "#/$defs/evidence" } },
+    "reading": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reading_id", "reading_type", "version", "supersedes_analysis_id", "context_disclosed", "reader", "method_notes"],
+      "properties": {
+        "reading_id": { "type": ["string", "null"], "description": "Stały identyfikator serii wersji, jeśli został już nadany." },
+        "reading_type": { "type": "string", "enum": ["blind", "contextual", "agent_review", "human_review", "HTR_aid"] },
+        "version": { "type": "integer", "minimum": 1 },
+        "supersedes_analysis_id": { "type": ["string", "null"] },
+        "context_disclosed": { "type": "boolean" },
+        "reader": { "type": ["string", "null"] },
+        "reader_run_id": { "type": ["string", "null"], "description": "Identyfikator konkretnego przebiegu czytelnika/agenta, używany do kontroli niezależności wejść." },
+        "method_notes": { "type": ["string", "null"] }
+      }
+    },
+    "classifications": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "information", "evidence", "rationale"],
+      "properties": {
+        "source": { "type": "string", "enum": ["Original", "Derivative", "Authored"] },
+        "information": { "type": "string", "enum": ["Primary", "Secondary", "Indeterminable"] },
+        "evidence": { "type": "string", "enum": ["Direct", "Indirect", "Negative"] },
+        "rationale": { "type": ["string", "null"] }
+      }
+    },
+    "segment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["segment_id", "text", "language", "image", "region", "sequence", "read_status"],
+      "properties": {
+        "segment_id": { "type": "string", "minLength": 1 },
+        "artifact_id": { "type": "string", "minLength": 1 },
+        "text": { "type": "string" },
+        "language": { "type": ["string", "null"] }, "image": { "type": "string" }, "region": { "type": "string" },
+        "sequence": { "type": "integer", "minimum": 0 }, "read_status": { "$ref": "#/$defs/readStatus" }
+      }
+    },
+    "layers": {
+      "type": "object", "additionalProperties": false,
+      "required": ["transcription", "transliteration", "translation", "extract"],
+      "properties": {
+        "transcription": { "type": "array", "items": { "$ref": "#/$defs/segment" } },
+        "transliteration": { "type": "array", "items": { "$ref": "#/$defs/segment" } },
+        "translation": { "type": "array", "items": { "$ref": "#/$defs/segment" } },
+        "extract": { "type": "array", "items": { "$ref": "#/$defs/segment" } }
+      }
+    },
+    "informant": {
+      "type": "object", "additionalProperties": false,
+      "required": ["participant_ref", "name_as_written", "role", "information_class", "basis"],
+      "properties": {
+        "participant_ref": { "type": ["string", "null"] }, "name_as_written": { "type": ["string", "null"] },
+        "role": { "type": ["string", "null"] },
+        "information_class": { "type": "string", "enum": ["Primary", "Secondary", "Indeterminable"] },
+        "basis": { "type": ["string", "null"] }
+      }
+    },
+    "participant": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "participant_id", "person_ref", "name_original", "name_normalized", "role", "sex", "age",
+        "occupation", "residence", "is_informant", "read_status", "evidence"
+      ],
+      "properties": {
+        "participant_id": { "type": "string", "minLength": 1 }, "person_ref": { "type": ["string", "null"] },
+        "name_original": { "type": "string" }, "name_normalized": { "type": ["string", "null"] },
+        "role": { "type": "string" }, "sex": { "type": ["string", "null"] }, "age": { "type": ["string", "null"] },
+        "occupation": { "type": ["string", "null"] }, "residence": { "type": ["string", "null"] },
+        "is_informant": { "type": "boolean" }, "read_status": { "$ref": "#/$defs/readStatus" },
+        "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "event": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event_id", "event_type", "date", "place", "participants", "read_status", "evidence"],
+      "properties": {
+        "event_id": { "type": "string", "minLength": 1 }, "event_type": { "type": "string" },
+        "date": {
+          "type": "object", "additionalProperties": false,
+          "required": ["as_written", "normalized", "calendar", "read_status"],
+          "properties": {
+            "as_written": { "type": ["string", "null"] }, "normalized": { "type": ["string", "null"] },
+            "calendar": { "type": "string", "enum": ["gregorian", "julian", "both", "unknown"] },
+            "read_status": { "$ref": "#/$defs/readStatus" }
+          }
+        },
+        "place": {
+          "type": "object", "additionalProperties": false,
+          "required": ["as_written", "normalized", "place_ref", "read_status"],
+          "properties": {
+            "as_written": { "type": ["string", "null"] }, "normalized": { "type": ["string", "null"] },
+            "place_ref": { "type": ["string", "null"] }, "read_status": { "$ref": "#/$defs/readStatus" }
+          }
+        },
+        "participants": { "type": "array", "items": { "$ref": "#/$defs/participant" } },
+        "read_status": { "$ref": "#/$defs/readStatus" }, "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "fieldReading": {
+      "type": "object", "additionalProperties": false,
+      "required": ["field_path", "proposed_reading", "alternatives", "read_status", "critical", "reason", "evidence"],
+      "properties": {
+        "field_path": { "type": "string" }, "proposed_reading": { "type": ["string", "null"] },
+        "alternatives": { "type": "array", "items": { "type": "string" } }, "read_status": { "$ref": "#/$defs/readStatus" },
+        "critical": { "type": "boolean" }, "reason": { "type": ["string", "null"] },
+        "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["artifact_id", "kind", "path", "derived_from", "operation", "parameters", "tool", "citeable_as_source"],
+      "properties": {
+        "artifact_id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["RAW", "DERIVED", "OCR", "HTR", "TRANSCRIPTION", "TRANSLITERATION", "TRANSLATION", "ANALYSIS"] },
+        "path": { "type": "string" }, "derived_from": { "type": ["string", "null"] }, "operation": { "type": ["string", "null"] },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false, "required": ["name", "value"],
+            "properties": { "name": { "type": "string" }, "value": { "type": ["string", "number", "boolean", "null"] } }
+          }
+        },
+        "tool": { "type": ["string", "null"] }, "citeable_as_source": { "type": "boolean" }
+      }
+    },
+    "independentCheck": {
+      "type": "object", "additionalProperties": false,
+      "required": ["check_type", "target", "outcome", "reference", "checked_by", "notes"],
+      "properties": {
+        "check_type": { "type": "string", "enum": ["same_scribe", "other_act", "index", "second_reader", "forum", "other"] },
+        "target": { "type": "string" }, "outcome": { "type": "string", "enum": ["supports", "conflicts", "inconclusive"] },
+        "reference": { "type": ["string", "null"] }, "checked_by": { "type": ["string", "null"] }, "notes": { "type": ["string", "null"] }
+      }
+    },
+    "uncertainty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["field_path", "fragment", "proposed_reading", "alternatives", "read_status", "reason", "next_action", "evidence"],
+      "properties": {
+        "field_path": { "type": ["string", "null"] }, "fragment": { "type": "string" },
+        "proposed_reading": { "type": ["string", "null"] }, "alternatives": { "type": "array", "items": { "type": "string" } },
+        "read_status": { "$ref": "#/$defs/readStatus" }, "reason": { "type": "string" },
+        "next_action": { "type": ["string", "null"] }, "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "legacyPerson": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name_original", "name_normalized", "roles", "sex", "confidence", "notes", "evidence"],
+      "properties": {
+        "name_original": { "type": "string" }, "name_normalized": { "type": "string" },
+        "roles": { "type": "array", "items": { "type": "string" } }, "sex": { "type": ["string", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }, "notes": { "type": ["string", "null"] },
+        "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "legacyDate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event", "as_written", "normalized", "calendar", "confidence", "evidence"],
+      "properties": {
+        "event": { "type": "string" }, "as_written": { "type": "string" }, "normalized": { "type": ["string", "null"] },
+        "calendar": { "type": "string", "enum": ["gregorian", "julian", "both", "unknown"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }, "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "legacyPlace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["as_written", "normalized", "place_type", "confidence", "evidence"],
+      "properties": {
+        "as_written": { "type": "string" }, "normalized": { "type": ["string", "null"] },
+        "place_type": { "type": ["string", "null"] }, "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "legacyRelationship": {
+      "type": "object", "additionalProperties": false,
+      "required": ["subject", "type", "object", "date", "place", "confidence", "evidence"],
+      "properties": {
+        "subject": { "type": "string" }, "type": { "type": "string" }, "object": { "type": "string" },
+        "date": { "type": ["string", "null"] }, "place": { "type": ["string", "null"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 }, "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    },
+    "legacyUncertainty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["reading", "alternatives", "reason", "evidence"],
+      "properties": {
+        "reading": { "type": "string" }, "alternatives": { "type": "array", "items": { "type": "string" } },
+        "reason": { "type": "string" }, "evidence": { "$ref": "#/$defs/evidenceList" }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-snippet-request/v1",
+  "title": "Genea reading snippet request",
+  "description": "Value-free request for deterministic field, context and full-act crops. It is not itself a blind-isolation boundary.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "packageId", "privacyClassification", "source", "fields"],
+  "properties": {
+    "schema": {
+      "const": "genea.reading-snippet-request/v1"
+    },
+    "packageId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "privacyClassification": {
+      "const": "public_historical"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "sha256", "locator"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        },
+        "locator": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/field" }
+    }
+  },
+  "$defs": {
+    "bbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "integer", "minimum": 0 },
+        "y": { "type": "integer", "minimum": 0 },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "locator", "sourceSegmentId", "regions"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": [
+            "person-name",
+            "place",
+            "date",
+            "age",
+            "occupation",
+            "relationship",
+            "number",
+            "other"
+          ]
+        },
+        "locator": { "type": "string", "minLength": 1 },
+        "sourceSegmentId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        },
+        "regions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["field", "context", "fullAct"],
+          "properties": {
+            "field": { "$ref": "#/$defs/bbox" },
+            "context": { "$ref": "#/$defs/bbox" },
+            "fullAct": { "$ref": "#/$defs/bbox" }
+          }
+        }
+      }
+    }
+  }
+}

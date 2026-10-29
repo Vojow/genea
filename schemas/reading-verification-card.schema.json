@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-verification-card/v1",
+  "title": "Complete, presentation-only act reading verification card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "summary", "fields", "issues"],
+  "properties": {
+    "schema": { "const": "genea.reading-verification-card/v1" },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fieldCount",
+        "agreedCount",
+        "disputedCount",
+        "incompleteCount",
+        "notComparedCount",
+        "humanReviewRequiredCount"
+      ],
+      "properties": {
+        "fieldCount": { "type": "integer", "minimum": 0 },
+        "agreedCount": { "type": "integer", "minimum": 0 },
+        "disputedCount": { "type": "integer", "minimum": 0 },
+        "incompleteCount": { "type": "integer", "minimum": 0 },
+        "notComparedCount": { "type": "integer", "minimum": 0 },
+        "humanReviewRequiredCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/field" }
+    },
+    "issues": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/issue" }
+    }
+  },
+  "$defs": {
+    "nullableString": {
+      "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "null" }]
+    },
+    "bbox": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "width", "height"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reasonCode"],
+      "properties": {
+        "id": { "$ref": "#/$defs/nullableString" },
+        "fieldPath": { "$ref": "#/$defs/nullableString" },
+        "reasonCode": { "type": "string", "minLength": 1 },
+        "priority": { "type": ["integer", "null"] },
+        "recommendedRole": { "$ref": "#/$defs/nullableString" },
+        "details": { "type": "object" }
+      }
+    },
+    "proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "normalizedValue",
+        "confidence",
+        "certainty",
+        "alternatives",
+        "materialAlternatives",
+        "sourceQuote"
+      ],
+      "properties": {
+        "value": { "$ref": "#/$defs/nullableString" },
+        "normalizedValue": { "$ref": "#/$defs/nullableString" },
+        "confidence": {
+          "oneOf": [
+            { "type": "number", "minimum": 0, "maximum": 1 },
+            { "type": "null" }
+          ]
+        },
+        "certainty": { "$ref": "#/$defs/nullableString" },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "materialAlternatives": { "type": "array", "items": { "type": "string" } },
+        "sourceQuote": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "blindReading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["readingId", "readerId", "value"],
+      "properties": {
+        "readingId": { "$ref": "#/$defs/nullableString" },
+        "readerId": { "$ref": "#/$defs/nullableString" },
+        "value": { "$ref": "#/$defs/nullableString" },
+        "normalizedValue": { "$ref": "#/$defs/nullableString" },
+        "certainty": { "$ref": "#/$defs/nullableString" },
+        "contextDisclosed": { "type": "boolean" }
+      }
+    },
+    "comparisonValue": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["readingId", "readerId", "value"],
+      "properties": {
+        "readingId": { "$ref": "#/$defs/nullableString" },
+        "readerId": { "$ref": "#/$defs/nullableString" },
+        "value": { "$ref": "#/$defs/nullableString" }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "values"],
+      "properties": {
+        "status": {
+          "enum": ["agreed", "disputed", "incomplete", "not_compared"]
+        },
+        "differenceKind": { "type": "string", "minLength": 1 },
+        "values": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/comparisonValue" }
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "basis"],
+      "properties": {
+        "status": {
+          "enum": [
+            "machine_proposal",
+            "missing",
+            "agent_consensus",
+            "agent_adjudicated",
+            "human_review_required",
+            "human_reviewed"
+          ]
+        },
+        "basis": { "enum": ["pipeline_assessment", "review_decision"] },
+        "decisionId": { "type": "string", "minLength": 1 },
+        "revision": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "backing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sourceItemId", "artifactId"],
+      "properties": {
+        "sourceItemId": { "type": "string", "minLength": 1 },
+        "artifactId": { "type": "string", "minLength": 1 },
+        "sourceSegmentId": { "type": "string", "minLength": 1 },
+        "bbox": {
+          "oneOf": [
+            { "$ref": "#/$defs/bbox" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "role",
+        "criticality",
+        "proposal",
+        "blindReadings",
+        "comparison",
+        "workflow",
+        "issues",
+        "backing"
+      ],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "role": { "$ref": "#/$defs/nullableString" },
+        "criticality": { "$ref": "#/$defs/nullableString" },
+        "proposal": { "$ref": "#/$defs/proposal" },
+        "blindReadings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/blindReading" }
+        },
+        "comparison": { "$ref": "#/$defs/comparison" },
+        "workflow": { "$ref": "#/$defs/workflow" },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/issue" }
+        },
+        "backing": { "$ref": "#/$defs/backing" }
+      }
+    }
+  }
+}

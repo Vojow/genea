@@ -1,0 +1,17 @@
+.tree-focused-ancestry[hidden], .tree-focused-scenario-picker[hidden] { display: none; }
+.tree-stage.is-focused-ancestry > .tree-focused-ancestry { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; touch-action: pan-y; }
+.tree-stage.is-focused-ancestry > .tree-toolbar,
+.tree-stage.is-focused-ancestry > .tree-focused-scenario-picker { flex-shrink: 0; }
+.tree-stage.is-focused-ancestry > .tree-scroll,
+.tree-stage.is-focused-ancestry > .tree-evidence-note,
+.tree-stage.is-focused-ancestry > .tree-legend,
+.tree-stage.is-focused-ancestry .tree-toolbar > .tree-zoom,
+.tree-stage.is-focused-ancestry .tree-toolbar > #tree-fit,
+.tree-stage.is-focused-ancestry .tree-toolbar > #tree-presentation-toggle,
+.tree-stage.is-focused-ancestry .tree-toolbar > .branch-picker,
+.tree-stage.is-focused-ancestry .tree-toolbar > .tree-ancestor-layout-controls,
+.tree-stage.is-focused-ancestry .tree-toolbar > .tree-ancestor-depth-controls { display: none !important; }
+#view-tree.is-focused-ancestry .tree-view-stats { display: none; }
+.tree-focused-scenario-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px 20px 0; font-size: 14px; }
+.tree-focused-scenario-picker select { min-height: 44px; max-width: 100%; flex: 1 1 220px; }
+[data-tree-focused-open] { min-height: 44px; }

@@ -1,0 +1,224 @@
+.tree-stage.is-unified-tree:not(.is-focused-ancestry) .tree-toolbar > .tree-conditional-overlay-controls,
+.tree-stage.is-unified-tree:not(.is-focused-ancestry) .tree-toolbar > .tree-conditional-ancestry-controls {
+  display: none !important;
+}
+
+.tree-stage.is-unified-tree .tree-toolbar {
+  min-height: 56px;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.tree-stage.is-unified-tree .tree-search {
+  flex: 1 1 240px;
+  min-width: min(240px, 100%);
+  max-width: 430px;
+}
+
+.tree-stage.is-unified-tree #tree-fit,
+.tree-stage.is-unified-tree .tree-toolbar > .quiet-button,
+.tree-stage.is-unified-tree .tree-zoom button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.tree-stage.is-unified-tree .tree-advanced-controls {
+  flex: 0 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.tree-stage.is-unified-tree .tree-advanced-controls > summary {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: white;
+  color: var(--forest);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.tree-stage.is-unified-tree .tree-advanced-controls[open] {
+  flex: 1 1 100%;
+}
+
+.tree-stage.is-unified-tree .tree-advanced-controls[open] > summary {
+  margin-bottom: 8px;
+}
+
+.tree-stage.is-unified-tree .tree-advanced-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.tree-stage.is-unified-tree .tree-unified-status {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 8px 16px;
+  border-bottom: 1px solid #e4d6be;
+  background: #f7f1e5;
+  color: #5f574d;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.tree-stage.is-unified-tree .tree-person {
+  overflow: visible;
+  padding: 6px;
+  height: 134px;
+}
+
+.tree-stage.is-unified-tree .tree-card-copy small {
+  margin-top: 2px;
+  line-height: 1.1;
+}
+
+.tree-stage.is-unified-tree .tree-evidence {
+  margin-top: 2px;
+  padding: 1px 5px;
+  line-height: 1;
+}
+
+.tree-stage.is-unified-tree .tree-card-copy strong {
+  min-height: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  font-size: 19px;
+  line-height: 1.15;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tree-stage.is-unified-tree .tree-card-main {
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 8px;
+}
+
+.tree-stage.is-unified-tree .tree-person.has-unified-parent-control .tree-card-main {
+  height: calc(100% - 58px);
+}
+
+.tree-stage.is-unified-tree .tree-avatar {
+  width: 32px;
+  height: 32px;
+}
+
+.tree-stage.is-unified-tree .tree-unified-parent-toggle {
+  position: absolute;
+  z-index: 7;
+  left: 6px;
+  bottom: 6px;
+  width: 98px;
+  min-height: 52px;
+  display: inline-grid;
+  place-items: center;
+  padding: 6px 8px;
+  border: 1px solid #9cbab2;
+  border-radius: 9px;
+  background: #fffdf8;
+  color: var(--forest);
+  cursor: pointer;
+  font: 700 11px/1.15 system-ui, sans-serif;
+  text-align: center;
+  box-shadow: 0 2px 7px rgba(70, 53, 32, .12);
+}
+
+.tree-stage.is-unified-tree .tree-unified-parent-toggle.is-collapsed {
+  border-color: #c7a873;
+  color: #735f3e;
+  background: #fff9ec;
+}
+
+.tree-stage.is-unified-tree .tree-unified-parent-toggle:hover {
+  border-color: var(--forest);
+  background: var(--forest-soft);
+}
+
+.tree-stage.is-unified-tree .tree-unified-parent-toggle:focus-visible,
+.tree-stage.is-unified-tree .tree-advanced-controls > summary:focus-visible {
+  outline: 3px solid rgba(40, 92, 83, .24);
+  outline-offset: 2px;
+}
+
+.tree-stage.is-unified-tree .tree-unified-ancestry-link {
+  fill: none;
+  stroke: var(--rust);
+  stroke-width: 2;
+  stroke-dasharray: 6 5;
+  opacity: .86;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (max-width: 760px) {
+  .tree-stage.is-unified-tree .tree-toolbar {
+    align-items: stretch;
+  }
+
+  .tree-stage.is-unified-tree .tree-search {
+    width: 100%;
+    max-width: none;
+  }
+
+  .tree-stage.is-unified-tree .tree-advanced-controls {
+    flex: 1 1 auto;
+  }
+
+  .tree-stage.is-unified-tree .tree-advanced-controls > summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .tree-stage.is-unified-tree .tree-evidence-note {
+    display: none;
+  }
+
+  .tree-stage.is-unified-tree:not(.is-list-presentation) .tree-scroll {
+    flex: none;
+    height: 360px;
+    min-height: 360px;
+  }
+
+  #view-tree:has(.tree-stage.is-unified-tree) .tree-heading {
+    margin-bottom: 14px;
+  }
+
+  #view-tree:has(.tree-stage.is-unified-tree) .tree-heading h1 {
+    font-size: 28px;
+  }
+
+  #view-tree:has(.tree-stage.is-unified-tree) .tree-view-stats {
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  #view-tree:has(.tree-stage.is-unified-tree) .tree-view-stats > div {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  #view-tree:has(.tree-stage.is-unified-tree) .tree-view-stats strong {
+    font-size: 20px;
+  }
+
+  .tree-stage.is-unified-tree.is-list-presentation .tree-person {
+    min-height: 134px;
+  }
+}

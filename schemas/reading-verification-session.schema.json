@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-verification-session/v1",
+  "title": "Blind reading verification session",
+  "description": "Minimal, value-free projection served by the isolated reading verification origin.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "runId", "csrfToken", "fields"],
+  "properties": {
+    "schema": { "const": "genea.reading-verification-session/v1" },
+    "runId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "csrfToken": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 256
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/field" }
+    }
+  },
+  "$defs": {
+    "scale": {
+      "enum": ["field", "context", "fullAct"]
+    },
+    "field": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "visibleScale",
+        "frozenScales",
+        "submittedScales",
+        "availableScales"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^f[0-9]{3}$" },
+        "kind": {
+          "enum": [
+            "person-name",
+            "place",
+            "date",
+            "age",
+            "occupation",
+            "relationship",
+            "number",
+            "other"
+          ]
+        },
+        "visibleScale": { "$ref": "#/$defs/scale" },
+        "frozenScales": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/scale" }
+        },
+        "submittedScales": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/scale" }
+        },
+        "availableScales": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/scale" }
+        }
+      }
+    }
+  }
+}

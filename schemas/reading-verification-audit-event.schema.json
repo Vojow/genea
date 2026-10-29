@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-verification-audit-event/v1",
+  "title": "Append-only reading verification audit event",
+  "description": "A value-free disclosure and freeze event. Literal readings are deliberately excluded.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "sequence",
+    "eventId",
+    "commandId",
+    "occurredAt",
+    "runId",
+    "fieldId",
+    "action",
+    "scale",
+    "previousEventHash",
+    "eventHash"
+  ],
+  "properties": {
+    "schema": { "const": "genea.reading-verification-audit-event/v1" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "eventId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "commandId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "runId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "fieldId": { "type": "string", "pattern": "^f[0-9]{3}$" },
+    "action": { "enum": ["freeze", "reveal"] },
+    "scale": { "enum": ["field", "context", "fullAct"] },
+    "submissionSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "previousEventHash": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      ]
+    },
+    "eventHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "action": { "const": "freeze" } },
+        "required": ["action"]
+      },
+      "then": { "required": ["submissionSha256"] },
+      "else": { "not": { "required": ["submissionSha256"] } }
+    }
+  ]
+}

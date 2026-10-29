@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "genea.reading-verification-submission/v1",
+  "title": "Frozen blind reading proposal",
+  "description": "A reader-authored literal proposal stored outside canonical SQLite after its hash has been frozen.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "sequence",
+    "commandId",
+    "occurredAt",
+    "runId",
+    "fieldId",
+    "scale",
+    "literalReading",
+    "submissionSha256",
+    "previousSubmissionHash",
+    "submissionRecordHash"
+  ],
+  "properties": {
+    "schema": { "const": "genea.reading-verification-submission/v1" },
+    "sequence": { "type": "integer", "minimum": 1 },
+    "commandId": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "runId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "fieldId": { "type": "string", "pattern": "^f[0-9]{3}$" },
+    "scale": { "enum": ["field", "context", "fullAct"] },
+    "literalReading": { "type": "string", "minLength": 1, "maxLength": 10000 },
+    "submissionSha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "previousSubmissionHash": {
+      "oneOf": [
+        { "type": "null" },
+        { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      ]
+    },
+    "submissionRecordHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "genea-local"
+version = "0.1.0"
+description = "Local, source-first genealogy research workspace"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "jsonschema==4.26.0",
+]
+
+[project.optional-dependencies]
+indexing = [
+  "kraken==7.1.0",
+]
+search = [
+  "rapidfuzz==3.14.3",
+]
+private = [
+  "argon2-cffi==25.1.0",
+  "cryptography==46.0.3",
+  "keyring==25.7.0",
+  "sqlcipher3==0.6.2",
+]
+
+[project.scripts]
+genea = "genea.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

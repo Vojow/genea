@@ -1,0 +1,36 @@
+# Dependencies and compiled code
+.venv/
+node_modules/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+dist/
+build/
+frontend/dist/
+frontend/data/
+output/
+outputs/
+work/
+# Local research and operational state
+/research/
+/sources/
+.genea/
+.codex/
+.local-workspace/
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite3-*
+*.gpa
+# Credentials and recovery material
+.env
+.env.*
+*.pem
+*.key
+*recovery*
+# Browser/test artifacts
+.playwright*/
+playwright-report/
+test-results/
+.DS_Store

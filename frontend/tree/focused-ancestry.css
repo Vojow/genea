@@ -1,0 +1,101 @@
+.tree-focused-ancestry {
+  --focused-forest: var(--forest, #285c53);
+  --focused-forest-soft: var(--forest-soft, #e5eee9);
+  --focused-cream: #fffdf8;
+  --focused-line: var(--line, #ddd5c8);
+  container-name: focused-ancestry;
+  container-type: inline-size;
+  min-width: 0;
+  color: var(--ink, #312d27);
+  background: linear-gradient(145deg, #faf6ec, var(--focused-cream));
+}
+
+.focused-ancestry-shell {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(12px, 2.5vw, 26px);
+}
+
+.tree-focused-ancestry button { font: inherit; }
+.focused-ancestry-header { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.focused-ancestry-header h2 { margin: 2px 0 5px; font: 700 clamp(22px, 3vw, 32px)/1.15 Georgia, serif; }
+.focused-ancestry-eyebrow { margin: 0; color: var(--focused-forest); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.focused-ancestry-basis { margin: 0; color: var(--muted, #726c62); font-size: 13px; }
+.focused-ancestry-exit,
+.focused-ancestry-breadcrumbs button,
+.focused-ancestry-visited button,
+.focused-ancestry-card-actions button {
+  min-height: 44px;
+  border: 1px solid var(--focused-line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--focused-forest);
+  cursor: pointer;
+}
+.focused-ancestry-exit { padding: 8px 14px; font-weight: 750; }
+.focused-ancestry-warning,
+.focused-ancestry-limit { margin: 0; padding: 10px 12px; border-left: 4px solid #a7663b; background: #fff7ee; font-size: 13px; line-height: 1.5; }
+.focused-ancestry-limit { border-left-color: #9a7a32; background: #fff9e9; }
+.focused-ancestry-breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
+.focused-ancestry-breadcrumbs > *:not(:last-child)::after { content: "›"; margin-left: 7px; color: var(--muted, #726c62); }
+.focused-ancestry-breadcrumbs button { min-height: 44px; padding: 7px 10px; }
+.focused-ancestry-breadcrumbs .is-current { font-weight: 750; }
+.focused-ancestry-visited { border: 1px solid var(--focused-line); border-radius: 12px; background: rgba(255, 253, 248, .8); }
+.focused-ancestry-visited summary { min-height: 44px; display: flex; align-items: center; padding: 0 12px; color: var(--focused-forest); font-size: 13px; font-weight: 750; cursor: pointer; }
+.focused-ancestry-visited ul { display: grid; gap: 7px; margin: 0; padding: 0 10px 10px; list-style: none; }
+.focused-ancestry-visited button { width: 100%; padding: 7px 10px; text-align: left; overflow-wrap: anywhere; }
+
+.focused-ancestry-canvas { position: relative; min-width: 0; }
+.focused-ancestry-connectors { position: absolute; inset: 0; z-index: 0; overflow: visible; pointer-events: none; }
+.focused-ancestry-connectors path { fill: none; stroke: #6f988e; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.focused-ancestry-connectors path.is-conditional { stroke: #a7663b; stroke-dasharray: 7 5; }
+.focused-ancestry-columns { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 2fr); gap: clamp(24px, 5cqw, 64px); align-items: center; }
+.focused-ancestry-root,
+.focused-ancestry-parent,
+.focused-ancestry-grandparents { min-width: 0; }
+.focused-ancestry-root > h3,
+.focused-ancestry-parent > h3,
+.focused-ancestry-grandparents > h4,
+.focused-ancestry-empty-branch > h3 { margin: 0 0 7px; color: var(--muted, #726c62); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.focused-ancestry-branches { display: grid; gap: 20px; }
+.focused-ancestry-branch { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(24px, 4cqw, 52px); align-items: center; min-width: 0; padding: 11px; border-radius: 16px; background: rgba(235, 229, 215, .32); }
+.focused-ancestry-grandparents { display: grid; gap: 9px; }
+
+.focused-ancestry-card { min-width: 0; overflow: hidden; border: 1px solid var(--focused-line); border-radius: 14px; background: rgba(255, 253, 248, .98); box-shadow: 0 5px 16px rgba(58, 48, 35, .08); }
+.focused-ancestry-card.is-selected { outline: 3px solid #7fa89e; outline-offset: 2px; }
+.focused-ancestry-select { width: 100%; min-height: 68px; display: grid; gap: 4px; padding: 12px; border: 0; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.focused-ancestry-select strong { overflow-wrap: anywhere; font: 700 16px/1.25 Georgia, serif; }
+.focused-ancestry-node-basis,
+.focused-ancestry-path-warning { color: var(--muted, #726c62); font-size: 11px; line-height: 1.35; }
+.focused-ancestry-path-warning { color: #8c4d2d; font-weight: 700; }
+.focused-ancestry-relation-warning { display: grid; gap: 2px; margin: 0 12px 8px; color: #8c4d2d; font-size: 11px; font-weight: 700; }
+.focused-ancestry-relation-warning.is-base { color: var(--focused-forest); }
+.focused-ancestry-relation-warning span { color: var(--muted, #726c62); font-weight: 500; }
+.focused-ancestry-card-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 9px 9px; }
+.focused-ancestry-card-actions button { flex: 1 1 130px; padding: 6px 9px; font-size: 11px; font-weight: 700; }
+.focused-ancestry-boundaries { display: grid; gap: 7px; }
+.focused-ancestry-boundary { margin: 8px 10px 10px; padding: 8px; border-radius: 9px; background: #f2eee5; color: var(--muted, #726c62); font-size: 11px; line-height: 1.45; }
+.focused-ancestry-boundary.is-gap { background: #fff3ea; color: #815035; }
+.focused-ancestry-boundary.is-limit,
+.focused-ancestry-boundary.is-collapsed { background: #fff8df; color: #765e25; }
+.focused-ancestry-boundary.is-cycle { background: #f4e9e5; color: #833f31; }
+.focused-ancestry-empty-branch { padding: 13px; border: 1px dashed var(--focused-line); border-radius: 14px; }
+.focused-ancestry-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; padding-top: 10px; border-top: 1px solid var(--focused-line); color: var(--muted, #726c62); font-size: 11px; }
+
+@container focused-ancestry (max-width: 720px) {
+  .focused-ancestry-shell { padding: 10px; }
+  .focused-ancestry-header { align-items: stretch; flex-direction: column; }
+  .focused-ancestry-exit { width: 100%; }
+  .focused-ancestry-columns { display: block; }
+  .focused-ancestry-root { margin-bottom: 24px; }
+  .focused-ancestry-branches { gap: 16px; }
+  .focused-ancestry-branch { display: grid; grid-template-columns: 1fr; gap: 20px; padding: 10px; }
+  .focused-ancestry-grandparents { margin-left: 14px; padding-left: 12px; border-left: 2px solid var(--focused-line); }
+  .focused-ancestry-card-actions { display: grid; grid-template-columns: 1fr; }
+  .focused-ancestry-card-actions button { width: 100%; min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focused-ancestry-shell * { scroll-behavior: auto; }
+}

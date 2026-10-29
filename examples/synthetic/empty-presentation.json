@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "schemaVersion": 1,
+    "generatedAt": "2000-01-01T00:00:00Z",
+    "mode": "empty-demo",
+    "methodNote": "Empty demonstration payload. No research records are included.",
+    "counts": {
+      "people": 0,
+      "personContexts": 0,
+      "personProfiles": 0,
+      "occurrences": 0,
+      "events": 0,
+      "places": 0,
+      "relationships": 0,
+      "sourceReportedNetworks": 0,
+      "identityCandidates": 0,
+      "households": 0,
+      "sources": 0,
+      "claims": 0,
+      "conflicts": 0,
+      "researchBacklog": 0,
+      "mapPlaces": 0,
+      "mapObservations": 0,
+      "volumeIndexes": 0
+    }
+  },
+  "people": [],
+  "personContexts": [],
+  "personProfiles": [],
+  "occurrences": [],
+  "events": [],
+  "temporalConstraints": [],
+  "places": [],
+  "relationships": [],
+  "sourceReportedNetworks": [],
+  "identityCandidates": [],
+  "identityGroups": [],
+  "sourceIdentityGroups": [],
+  "households": [],
+  "sources": [],
+  "claims": [],
+  "conflicts": [],
+  "volumeIndexes": [],
+  "clusters": [],
+  "researchBacklog": {
+    "items": [],
+    "cases": [],
+    "workflowStages": [],
+    "scopeIds": [],
+    "scopes": [],
+    "scopeEdges": [],
+    "summary": {
+      "total": 0,
+      "candidates": 0
+    }
+  },
+  "familyTree": {
+    "people": [],
+    "branches": [],
+    "families": [],
+    "unions": [],
+    "focusPath": [],
+    "title": "Empty demonstration",
+    "subtitle": "No research records are included."
+  },
+  "graphScopes": {},
+  "map": {
+    "places": [],
+    "observations": [],
+    "sourceObservations": []
+  }
+}

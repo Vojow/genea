@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "question": "Which fictional record should receive a new independent reading?",
+  "scope": "Synthetic records only; this fixture contains no real research data.",
+  "searchSummary": "Three invented catalogue leads illustrate selection, deferral and reuse; no completeness or identity claim is made.",
+  "leads": [
+    {
+      "id": "EXAMPLE-LEAD-1",
+      "sourceId": "EXAMPLE-SOURCE-1",
+      "locator": "Synthetic volume A, page 1, entry 1",
+      "provenance": {
+        "url": "https://example.invalid/synthetic/volume-a/page-1",
+        "backingIds": ["SYNTHETIC-CATALOGUE-1"]
+      },
+      "disposition": "selected",
+      "readingStatus": "not_read",
+      "reason": "The invented entry has a verified test locator and no prior reading."
+    },
+    {
+      "id": "EXAMPLE-LEAD-2",
+      "sourceId": "EXAMPLE-SOURCE-2",
+      "locator": "Synthetic volume B, page 2, entry 2",
+      "provenance": {
+        "backingIds": ["SYNTHETIC-CATALOGUE-2"]
+      },
+      "disposition": "deferred",
+      "readingStatus": "not_read",
+      "reason": "The invented alternative is outside this bounded test selection."
+    },
+    {
+      "id": "EXAMPLE-LEAD-3",
+      "sourceId": "EXAMPLE-SOURCE-OLD",
+      "locator": "Synthetic volume C, page 3, entry 3",
+      "provenance": {
+        "backingIds": ["SYNTHETIC-CATALOGUE-3"]
+      },
+      "disposition": "reuse",
+      "readingStatus": "reusable",
+      "existingWorkRefs": ["SYNTHETIC-FROZEN-READING-3"],
+      "reason": "Reuse the existing fictional reading because its input is unchanged."
+    }
+  ]
+}
